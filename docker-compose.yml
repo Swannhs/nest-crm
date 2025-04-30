@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # Customer Service
+  customer-service:
+    build:
+      context: ./customer-service
+      dockerfile: docker/local/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_HOST=customer-db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=customer_db
+    volumes:
+      - ./customer-service:/usr/src/app
+      - customer-node-modules:/usr/src/app/node_modules
+    depends_on:
+      - customer-db
+    command: yarn start:dev
+    networks:
+      - nestjs-network
+
+  customer-db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=customer_db
+    volumes:
+      - customer-db-data:/var/lib/postgresql/data
+    networks:
+      - nestjs-network
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: docker/local/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_HOST=auth-db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=auth_db
+    volumes:
+      - ./auth-service:/usr/src/app
+      - auth-node-modules:/usr/src/app/node_modules
+    depends_on:
+      - auth-db
+    command: yarn start:dev
+    networks:
+      - nestjs-network
+
+  auth-db:
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=auth_db
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    networks:
+      - nestjs-network
+
+  # Contact Service
+  contact-service:
+    build:
+      context: ./contact-service
+      dockerfile: docker/local/Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_HOST=contact-db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=contact_db
+    volumes:
+      - ./contact-service:/usr/src/app
+      - contact-node-modules:/usr/src/app/node_modules
+    depends_on:
+      - contact-db
+    command: yarn start:dev
+    networks:
+      - nestjs-network
+
+  contact-db:
+    image: postgres:15
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=contact_db
+    volumes:
+      - contact-db-data:/var/lib/postgresql/data
+    networks:
+      - nestjs-network
+
+networks:
+  nestjs-network:
+    driver: bridge
+
+volumes:
+  customer-db-data:
+  auth-db-data:
+  contact-db-data:
+  customer-node-modules:
+  auth-node-modules:
+  contact-node-modules:
