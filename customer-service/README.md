@@ -96,3 +96,133 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+# Customer Service
+
+This service manages customer profiles, organizational accounts, and customer segments, supporting both B2C and B2B scenarios. It uses PostgreSQL for data storage and provides a RESTful API for interacting with customer data.
+
+## Features
+
+- Customer management (create, read, update, delete)
+- Account management for B2B scenarios
+- Customer segmentation for marketing and analytics
+- Address management for customers and accounts
+- Custom fields for flexible customer data
+
+## Database Design
+
+The service uses a PostgreSQL database with the following tables:
+
+- `customers`: Stores individual customer profiles
+- `accounts`: Stores organizational accounts for B2B scenarios
+- `segments`: Stores customer segments for marketing and analytics
+- `customer_segments`: Junction table for many-to-many relationships between customers and segments
+- `addresses`: Stores customer and account addresses
+- `custom_fields`: Stores custom key-value pairs for customers
+
+## API Endpoints
+
+### Customers
+
+- `POST /api/customers`: Create a new customer
+- `GET /api/customers`: Get all customers
+- `GET /api/customers/:id`: Get a customer by ID
+- `PATCH /api/customers/:id`: Update a customer
+- `DELETE /api/customers/:id`: Delete a customer
+
+### Accounts
+
+- `POST /api/accounts`: Create a new account
+- `GET /api/accounts`: Get all accounts
+- `GET /api/accounts/:id`: Get an account by ID
+- `PATCH /api/accounts/:id`: Update an account
+- `DELETE /api/accounts/:id`: Delete an account
+
+### Segments
+
+- `POST /api/segments`: Create a new segment
+- `GET /api/segments`: Get all segments
+- `GET /api/segments/:id`: Get a segment by ID
+- `PATCH /api/segments/:id`: Update a segment
+- `DELETE /api/segments/:id`: Delete a segment
+- `POST /api/segments/:id/customers`: Add customers to a segment
+- `DELETE /api/segments/:id/customers`: Remove customers from a segment
+
+### Addresses
+
+- `POST /api/addresses`: Create a new address
+- `GET /api/addresses`: Get all addresses
+- `GET /api/addresses?entityType=X&entityId=Y`: Get addresses by entity type and ID
+- `GET /api/addresses/:id`: Get an address by ID
+- `PATCH /api/addresses/:id`: Update an address
+- `DELETE /api/addresses/:id`: Delete an address
+- `DELETE /api/addresses?entityType=X&entityId=Y`: Delete addresses by entity type and ID
+
+### Custom Fields
+
+- `POST /api/custom-fields`: Create a new custom field
+- `GET /api/custom-fields`: Get all custom fields
+- `GET /api/custom-fields?customerId=X`: Get custom fields by customer ID
+- `GET /api/custom-fields?customerId=X&key=Y`: Get a custom field by customer ID and key
+- `GET /api/custom-fields/:id`: Get a custom field by ID
+- `PATCH /api/custom-fields/:id`: Update a custom field
+- `DELETE /api/custom-fields/:id`: Delete a custom field
+- `DELETE /api/custom-fields?customerId=X`: Delete custom fields by customer ID
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- PostgreSQL (v12 or later)
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies: `yarn install`
+3. Create a PostgreSQL database: `createdb crm_customers`
+4. Configure environment variables in `.env` file
+5. Start the application: `yarn start:dev`
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=crm_customers
+DB_LOGGING=true
+
+# Application Configuration
+PORT=3000
+NODE_ENV=development
+```
+
+## Development
+
+### Running the Application
+
+```bash
+# development
+yarn start:dev
+
+# production mode
+yarn start:prod
+```
+
+### Testing
+
+```bash
+# unit tests
+yarn test
+
+# e2e tests
+yarn test:e2e
+
+# test coverage
+yarn test:cov
+```
